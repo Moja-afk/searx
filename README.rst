@@ -1,6 +1,6 @@
 .. SPDX-License-Identifier: AGPL-3.0-or-later
 
-.. figure:: https://raw.githubusercontent.com/searx/searx/master/searx/static/themes/oscar/img/logo_searx_a.png
+.. figure:: https://raw.githubusercontent.com/searx/searx/master/searx/static/themes/oscar/img/lelantus.png
    :target: https://searx.github.io/searx/
    :alt: searX
    :width: 100%
@@ -12,12 +12,7 @@
 |searx homepage|
 |searx wiki|
 |AGPL License|
-|Issues|
-|commits|
-|OpenCollective searx backers|
-|OpenCollective searx sponsors|
 
-Privacy-respecting, hackable `metasearch engine`_ / *pronunciation* **sɜːks**.
 
 .. _metasearch engine: https://en.wikipedia.org/wiki/Metasearch_engine
 
@@ -33,54 +28,64 @@ Privacy-respecting, hackable `metasearch engine`_ / *pronunciation* **sɜːks**.
 .. |AGPL License|  image:: https://img.shields.io/badge/license-AGPL-blue.svg
    :target: https://github.com/searx/searx/blob/master/LICENSE
 
-.. |Issues| image:: https://img.shields.io/github/issues/searx/searx?color=yellow&label=issues
-   :target: https://github.com/searx/searx/issues
+Getting Started!
+##################
+I released a vdi for vm users. The file is located here: [Moja's Drive]()  
 
-.. |PR| image:: https://img.shields.io/github/issues-pr-raw/searx/searx?color=yellow&label=PR
-   :target: https://github.com/searx/searx/pulls
+If possible start a virtual machine with Virtualbox. The steps to do so are listed [HERE](https://www.youtube.com/watch?v=l97dVIKlmVg)  
 
-.. |commits| image:: https://img.shields.io/github/commit-activity/y/searx/searx?color=yellow&label=commits
-   :target: https://github.com/searx/searx/commits/master
+After you have a properly set up virtual machine, complete the following next steps.  
 
-.. |OpenCollective searx backers| image:: https://opencollective.com/searx/backers/badge.svg
-   :target: https://opencollective.com/searx#backer
+Navigate to your Downloads folder and clone searx:  
 
-.. |OpenCollective searx sponsors| image:: https://opencollective.com/searx/sponsors/badge.svg
-   :target: https://opencollective.com/searx#sponsor
+```
+$ cd ~/Downloads
+$ git clone https://github.com/Moja-afk/searx/searx searx
+$ cd searx
+```  
+
+**Install utilities**  
+
+```$ sudo -H ./utils/searx.sh install all```
+
+**Install filtron reverse proxy**  
+
+``` $ sudo -H ./utils/filtron.sh install all ```
+
+**Install result proxy**  
+
+```$ sudo -H ./utils/morty.sh install all```  
+
+**Next create user:**  
+
+$ sudo -H useradd --shell /bin/bash --system \
+    home-dir "/usr/local/searx" \
+    comment "Privacy-respecting metasearch engine" searx
+$ sudo -H mkdir "/usr/local/searx"
+$ sudo -H chown -R "searx:searx" "/usr/local/searx"  
 
 
-If you are looking for running instances, ready to use, then visit searx.space_.
 
-Otherwise jump to the user_, admin_ and developer_ handbooks you will find on
-our homepage_.
 
-.. _searx.space: https://searx.space
-.. _user: https://searx.github.io/searx/user
-.. _admin: https://searx.github.io/searx/admin
-.. _developer: https://searx.github.io/searx/dev
-.. _homepage: https://searx.github.io/searx
+**Add default settings:**  
 
-contact:
-  openhub_ // twitter_ // IRC: #searx @ Libera (irc.libera.chat)
+$ sudo -H mkdir -p "/etc/searx"
+$ sudo -H cp "/usr/local/searx/searx-src/utils/templates/etc/searx/use_default_settings.yml" \
+             "/etc/searx/settings.yml"
 
-.. _openhub: https://www.openhub.net/p/searx
-.. _twitter: https://twitter.com/Searx_engine
 
-**************************
-Frequently asked questions
-**************************
+Encryption
+###########
+Encryption is an important part of private search functionality:  
 
-Is searx in maintenance mode?
-#############################
+```
+$ sudo -H sed -i -e "s/ultrasecretkey/$(openssl rand -hex 16)/g" "/etc/searx/settings.yml"
+$ sudo -H sed -i -e "s/{instance_name}/searx@$(uname -n)/g" "/etc/searx/settings.yml"
+```  
 
-No, searx is accepting new features, including new engines. We are also adding
-engine fixes or other bug fixes when needed. Also, keep in mind that searx is
-maintained by volunteers who work in their free time. So some changes might take
-some time to be merged.
 
-We reject features that might violate the privacy of users. If you really want
-such a feature, it must be disabled by default and warn users about the consequances
-of turning it off.
+
+
 
 What is the difference between searx and SearxNG?
 #################################################
@@ -103,29 +108,3 @@ We could have had better and more error reports to benefit searx maintainers.
 However, we believe that the users of searx must come first, not the
 software. We are willing to compromise on the lack of issue reports to avoid
 violating the privacy of users.
-
-Furthermore, SearxNG is under heavy refactoring and dependencies are constantly updated, even
-if it is unnecessary. It increases the risk of introducing regressions. In searx
-we strive for stability, rather than moving fast and breaking things.
-
-Is searx for me?
-################
-
-Are you privacy conscious user? Then yes.
-
-In searx we decided to double down on being privacy respecting. We are picking
-engine changes from SearxNG, but we are not implementing engine detailed
-monitoring and not adding a new UI that relies on Javascript.
-
-If you are willing to give up some privacy respecting features, we encourage you to
-adopt SearxNG. Searx is targeted for privacy conscious users who run their
-instances locally, instead of using public instances.
-
-Why should I use SearxNG?
-#########################
-
-SearxNG has rolling releases, dependencies updated more frequently, and engines are fixed
-faster. It is easy to set up your own public instance, and monitor its
-performance and metrics. It is simple to maintain as an instance administrator.
-
-As a user, it provides a prettier user interface and nicer experience.
